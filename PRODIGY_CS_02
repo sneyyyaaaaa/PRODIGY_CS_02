@@ -1,0 +1,49 @@
+from PIL import Image
+
+def encrypt_image(input_path, output_path, key):
+    # Open the image
+    img = Image.open(input_path)
+    
+    # Get image data as a list of tuples
+    pixels = list(img.getdata())
+
+    # Encrypt each pixel using XOR with the key
+    encrypted_pixels = [(pixel[0] ^ key, pixel[1] ^ key, pixel[2] ^ key) for pixel in pixels]
+
+    # Create a new image with encrypted pixels
+    encrypted_img = Image.new(img.mode, img.size)
+    encrypted_img.putdata(encrypted_pixels)
+
+    # Save the encrypted image
+    encrypted_img.save(output_path)
+    print("Image encrypted successfully!")
+
+def decrypt_image(input_path, output_path, key):
+    # Open the encrypted image
+    encrypted_img = Image.open(input_path)
+    
+    # Get encrypted image data as a list of tuples
+    encrypted_pixels = list(encrypted_img.getdata())
+
+    # Decrypt each pixel using XOR with the key
+    decrypted_pixels = [(pixel[0] ^ key, pixel[1] ^ key, pixel[2] ^ key) for pixel in encrypted_pixels]
+
+    # Create a new image with decrypted pixels
+    decrypted_img = Image.new(encrypted_img.mode, encrypted_img.size)
+    decrypted_img.putdata(decrypted_pixels)
+
+    # Save the decrypted image
+    decrypted_img.save(output_path)
+    print("Image decrypted successfully!")
+
+# Example usage:
+input_image_path = "input_image.jpg"
+encrypted_image_path = "encrypted_image.png"
+decrypted_image_path = "decrypted_image.jpg"
+encryption_key = 123
+
+# Encrypt the image
+encrypt_image(input_image_path, encrypted_image_path, encryption_key)
+
+# Decrypt the image
+decrypt_image(encrypted_image_path, decrypted_image_path, encryption_key)
